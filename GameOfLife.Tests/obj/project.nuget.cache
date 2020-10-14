@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Uvm/LVfwvpT2y8Ff49z8Az8odnfJ4Pvug1gJcf6qqYbwOQi/Rr3o/jo3bZooHM/yVcZeBjv6P/3EDPF/YisOLQ==",
+  "dgSpecHash": "8tBcLaVs782tCuOsTIofYH982X8HfclVPOeTrBg5B4aowkJE4bSY7Dno4MS15kymAVx/vi3vHfYnE4V+yHVfTA==",
   "success": true,
   "projectFilePath": "/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife.Tests/GameOfLife.Tests.csproj",
   "expectedPackageFiles": [

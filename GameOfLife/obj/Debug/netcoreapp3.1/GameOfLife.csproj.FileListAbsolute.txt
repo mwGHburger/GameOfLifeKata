@@ -1,0 +1,12 @@
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/bin/Debug/netcoreapp3.1/GameOfLife.deps.json
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/bin/Debug/netcoreapp3.1/GameOfLife.runtimeconfig.json
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/bin/Debug/netcoreapp3.1/GameOfLife.runtimeconfig.dev.json
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/bin/Debug/netcoreapp3.1/GameOfLife.dll
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/bin/Debug/netcoreapp3.1/GameOfLife.pdb
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/obj/Debug/netcoreapp3.1/GameOfLife.csprojAssemblyReference.cache
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/obj/Debug/netcoreapp3.1/GameOfLife.AssemblyInfoInputs.cache
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/obj/Debug/netcoreapp3.1/GameOfLife.AssemblyInfo.cs
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/obj/Debug/netcoreapp3.1/GameOfLife.csproj.CoreCompileInputs.cache
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/obj/Debug/netcoreapp3.1/GameOfLife.dll
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/obj/Debug/netcoreapp3.1/GameOfLife.pdb
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife/obj/Debug/netcoreapp3.1/GameOfLife.genruntimeconfig.cache
