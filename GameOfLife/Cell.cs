@@ -14,6 +14,7 @@ namespace GameOfLife
         
         public Cell(Row row, Column column, bool isLiving = false, string nextEvolution = "dead")
         {
+            // TODO: refactor ROW and COLUMN
             Row = row;
             Column = column;
             RowLocation = row.Location;

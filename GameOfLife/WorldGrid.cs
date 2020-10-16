@@ -25,6 +25,7 @@ namespace GameOfLife
             while(true)
             {
                 ConsoleParser.DisplayWorldGrid(Cells, Columns.Count);
+                // TODO: DRY issue
                 foreach(Cell cell in Cells)
                 {
                     DetermineNextEvolution(cell);
@@ -34,7 +35,6 @@ namespace GameOfLife
                 {
                     EvolutionHandler.Evolve(cell);
                 }
-                // timeout
                 System.Threading.Thread.Sleep(500);
                 Console.Clear();
             }
@@ -48,14 +48,8 @@ namespace GameOfLife
         {
             var livingNeighbours = CalculateNumberOfLivingNeighbours(cell);
             var conditionForNextEvolutionToBeLiving = cell.IsLiving && (livingNeighbours == 2 || livingNeighbours == 3) || !cell.IsLiving && (livingNeighbours == 3);
-
-            if(conditionForNextEvolutionToBeLiving)
-            {
-                cell.NextEvolution = "living";
-                return;
-            }
-            cell.NextEvolution = "dead";
-            return;
+            // TODO: consider making it bool, can change property name to isNextEvolutionLiving
+            cell.NextEvolution = (conditionForNextEvolutionToBeLiving) ? "living" : "dead";
         }
 
         private void CreateRows(int rowLength)
@@ -98,48 +92,45 @@ namespace GameOfLife
         private int CalculateNumberOfLivingNeighbours(Cell cell)
         {
             // TODO: Can make it more efficient by storing neighbours as Cell property
+            // TODO: make neighbouring cells into a list and make the addneighbours method into one method that takes the list
             var neighbours = new List<Cell>();
             AddNeighboursAboveRowToList(cell.RowLocation,cell.ColumnLocation, neighbours);
             AddNeighboursSameRowToList(cell.RowLocation,cell.ColumnLocation, neighbours);
             AddNeighboursBelowRowToList(cell.RowLocation,cell.ColumnLocation, neighbours);
             return CountAllLivingCell(neighbours);
         }
-        private void AddNeighboursAboveRowToList(int currentCellRowLocation, int currentCellColumnLocation, List<Cell> neighbourCells)
+        private void AddNeighboursAboveRowToList(int currentCellRow, int currentCellColumn, List<Cell> neighbourCells)
         {
-            AddCellToNeighbourList(currentCellRowLocation + 1, currentCellColumnLocation - 1, neighbourCells);
-            AddCellToNeighbourList(currentCellRowLocation + 1, currentCellColumnLocation, neighbourCells);
-            AddCellToNeighbourList(currentCellRowLocation + 1, currentCellColumnLocation + 1, neighbourCells);
+            AddCellToNeighbourList(currentCellRow + 1, currentCellColumn - 1, neighbourCells);
+            AddCellToNeighbourList(currentCellRow + 1, currentCellColumn, neighbourCells);
+            AddCellToNeighbourList(currentCellRow + 1, currentCellColumn + 1, neighbourCells);
         }
-        private void AddNeighboursSameRowToList(int currentCellRowLocation, int currentCellColumnLocation, List<Cell> neighbourCells)
+        private void AddNeighboursSameRowToList(int currentCellRow, int currentCellColumn, List<Cell> neighbourCells)
         {
-            AddCellToNeighbourList(currentCellRowLocation, currentCellColumnLocation - 1, neighbourCells);
-            AddCellToNeighbourList(currentCellRowLocation, currentCellColumnLocation + 1, neighbourCells);
-            
+            AddCellToNeighbourList(currentCellRow, currentCellColumn - 1, neighbourCells);
+            AddCellToNeighbourList(currentCellRow, currentCellColumn + 1, neighbourCells);
         }
-        private void AddNeighboursBelowRowToList(int currentCellRowLocation, int currentCellColumnLocation, List<Cell> neighbourCells)
+        private void AddNeighboursBelowRowToList(int currentCellRow, int currentCellColumn, List<Cell> neighbourCells)
         {
-            AddCellToNeighbourList(currentCellRowLocation - 1, currentCellColumnLocation - 1, neighbourCells);
-            AddCellToNeighbourList(currentCellRowLocation - 1, currentCellColumnLocation, neighbourCells);
-            AddCellToNeighbourList(currentCellRowLocation - 1, currentCellColumnLocation + 1, neighbourCells);
+            AddCellToNeighbourList(currentCellRow - 1, currentCellColumn - 1, neighbourCells);
+            AddCellToNeighbourList(currentCellRow - 1, currentCellColumn, neighbourCells);
+            AddCellToNeighbourList(currentCellRow - 1, currentCellColumn + 1, neighbourCells);
         }
         private int CountAllLivingCell(List<Cell> neighbourCells)
         {
             var livingNeighboursCounter = 0;
             foreach(Cell neighbourCell in neighbourCells)
             {
-                if(neighbourCell.IsLiving)
-                {
-                    livingNeighboursCounter++;
-                }
+                livingNeighboursCounter += (neighbourCell.IsLiving) ? 1 : 0;
             }
             return livingNeighboursCounter;
         }
 
-        private void AddCellToNeighbourList(int currentCellRowLocation, int currentCellColumnLocation, List<Cell> neighbourCells)
+        private void AddCellToNeighbourList(int currentCellRow, int currentCellColumn, List<Cell> neighbourCells)
         {
-            currentCellRowLocation = AdjustForOutOfBoundsRow(currentCellRowLocation);
-            currentCellColumnLocation = AdjustForOutOfBoundsColumn(currentCellColumnLocation);
-            neighbourCells.Add(FindCell(currentCellRowLocation, currentCellColumnLocation));
+            currentCellRow = AdjustForOutOfBoundsRow(currentCellRow);
+            currentCellColumn = AdjustForOutOfBoundsColumn(currentCellColumn);
+            neighbourCells.Add(FindCell(currentCellRow, currentCellColumn));
         }
 
         // Can refactor for DRY

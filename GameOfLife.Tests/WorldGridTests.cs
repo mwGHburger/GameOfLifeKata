@@ -35,7 +35,6 @@ namespace GameOfLife.Tests
         [InlineData(4,4,2,3,2,3)]
         public void ShouldReturnCell_GivenRowAndColumn(int rowLength, int columnLength, int rowLocation, int columnLocation, int expectedRowLocation, int expectedColumnLocation)
         {
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: rowLength, columnLength: columnLength, initialSeed: defaultSeed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
 
             var actual = world.FindCell(rowLocation,columnLocation);
@@ -55,7 +54,6 @@ namespace GameOfLife.Tests
                 new Cell(3,2),
                 new Cell(3,3)
             };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             var cell_1 = world.FindCell(2,2);
             var cell_2 = world.FindCell(2,3);
@@ -78,7 +76,6 @@ namespace GameOfLife.Tests
                 new Cell(2,2),
                 new Cell(2,3),
             };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             
             var cell = world.FindCell(2,2);
@@ -101,7 +98,6 @@ namespace GameOfLife.Tests
                 new Cell(3,2),
                 new Cell(3,3)
             };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             
             var cell = world.FindCell(2,2);
@@ -123,7 +119,6 @@ namespace GameOfLife.Tests
                 new Cell(3,2),
                 new Cell(3,3)
             };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             
             var cell = world.FindCell(2,2);
@@ -144,7 +139,6 @@ namespace GameOfLife.Tests
                 new Cell(3,2),
                 new Cell(3,3)
             };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             
             var cell = world.FindCell(2,2);
@@ -164,7 +158,6 @@ namespace GameOfLife.Tests
                 new Cell(2,3),
                 new Cell(3,2),
             };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             
             var cell = world.FindCell(2,2);
@@ -184,7 +177,6 @@ namespace GameOfLife.Tests
                 new Cell(4,4),
                 new Cell(1,1),
             };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             
             var cell = world.FindCell(4,4);
@@ -207,7 +199,6 @@ namespace GameOfLife.Tests
                 new Cell(3,3),
                 new Cell(4,4)
             };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             
             var cell = world.FindCell(4,4);
@@ -229,7 +220,6 @@ namespace GameOfLife.Tests
                 new Cell(2,1),
                 new Cell(4,4)
             };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             
             var cell = world.FindCell(1,1);
@@ -250,7 +240,6 @@ namespace GameOfLife.Tests
                 new Cell(3,3),
                 new Cell(3,4)
             };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             
             var cell = world.FindCell(4,4);
@@ -270,7 +259,6 @@ namespace GameOfLife.Tests
                 new Cell(4,3),
                 new Cell(1,1),
             };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             
             var cell = world.FindCell(4,4);
@@ -280,24 +268,6 @@ namespace GameOfLife.Tests
             world.DetermineNextEvolution(cell);
 
             Assert.Equal("dead", cell.NextEvolution);
-        }
-
-        [Fact]
-        public void RunShouldStartTheGameOfLife()
-        {
-            var seed = new List<Cell>()
-            {
-                new Cell(2,2),
-                new Cell(2,3),
-                new Cell(3,2),
-                new Cell(3,3)
-            };
-            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
-            var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-
-            //world.Run();
-            
-            //mockEvolutionHandler.Verify(x => x.Evolve(It.IsAny<Cell>()));
         }
     }
 }

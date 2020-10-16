@@ -4,13 +4,13 @@ namespace GameOfLife.Tests
 {
     public class EvolutionHandlerTests
     {
+        EvolutionHandler evolutionHandler = new EvolutionHandler();
+        Cell cell = new Cell(2,2);
         [Fact]
         public void EvolveShouldChangeTheCellStateToLiving_GivenItsNextEvolutionIsLiving()
         {
-            var cell = new Cell(2,2);
             cell.IsLiving = false;
             cell.NextEvolution = "living";
-            var evolutionHandler = new EvolutionHandler();
 
             evolutionHandler.Evolve(cell);
 
@@ -20,10 +20,8 @@ namespace GameOfLife.Tests
         [Fact]
         public void EvolveShouldChangeTheCellStateToDead_GivenItsNextEvolutionIsDead()
         {
-            var cell = new Cell(2,2);
             cell.IsLiving = true;
             cell.NextEvolution = "dead";
-            var evolutionHandler = new EvolutionHandler();
 
             evolutionHandler.Evolve(cell);
 

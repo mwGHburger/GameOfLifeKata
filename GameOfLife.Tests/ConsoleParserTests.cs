@@ -24,7 +24,7 @@ namespace GameOfLife.Tests
 
             consolParser.DisplayWorldGrid(world.Cells, world.Columns.Count);
 
-            mockConsoleWrapper.Verify(x => x.Write("0 0 0 0\n0 1 1 0\n0 1 1 0\n0 0 0 0\n"));
+            mockConsoleWrapper.Verify(x => x.Write("       \n  * *  \n  * *  \n       \n"));
         }
     }
 }
