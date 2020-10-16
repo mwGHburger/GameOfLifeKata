@@ -15,8 +15,8 @@ namespace GameOfLife
         public Cell(Row row, Column column, bool isLiving = false, string nextEvolution = "dead")
         {
             Row = row;
-            RowLocation = row.Location;
             Column = column;
+            RowLocation = row.Location;
             ColumnLocation = column.Location;
             IsLiving = isLiving;
             NextEvolution = nextEvolution;

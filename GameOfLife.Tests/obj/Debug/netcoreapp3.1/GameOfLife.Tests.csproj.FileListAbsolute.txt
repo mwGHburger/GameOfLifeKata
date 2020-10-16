@@ -96,3 +96,5 @@
 /Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife.Tests/obj/Debug/netcoreapp3.1/GameOfLife.Tests.dll
 /Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife.Tests/obj/Debug/netcoreapp3.1/GameOfLife.Tests.pdb
 /Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife.Tests/obj/Debug/netcoreapp3.1/GameOfLife.Tests.genruntimeconfig.cache
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife.Tests/bin/Debug/netcoreapp3.1/Castle.Core.dll
+/Users/Michael.Wang/Desktop/MYOB/MYOB Katas/Language Design/GameOfLifeKata/GameOfLife.Tests/bin/Debug/netcoreapp3.1/Moq.dll

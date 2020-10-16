@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace GameOfLife
@@ -7,12 +8,36 @@ namespace GameOfLife
         public List<Row> Rows { get; } = new List<Row>();
         public List<Column> Columns { get;} = new List<Column>();
         public List<Cell> Cells { get;} = new List<Cell>();
-        public WorldGrid(int rowLength, int columnLength, List<Cell> initialSeed)
+        public IEvolutionHandler EvolutionHandler { get; }
+        public ConsoleParser ConsoleParser { get; }
+        public WorldGrid(int rowLength, int columnLength, List<Cell> initialSeed, IEvolutionHandler evolutionHandler, ConsoleParser consoleParser)
         {
             CreateRows(rowLength);
             CreateColumns(columnLength);
             CreateCells();
             PlantSeed(initialSeed);
+            EvolutionHandler = evolutionHandler;
+            ConsoleParser = consoleParser;
+        }
+
+        public void Run()
+        {
+            while(true)
+            {
+                ConsoleParser.DisplayWorldGrid(Cells, Columns.Count);
+                foreach(Cell cell in Cells)
+                {
+                    DetermineNextEvolution(cell);
+                }
+
+                foreach(Cell cell in Cells)
+                {
+                    EvolutionHandler.Evolve(cell);
+                }
+                // timeout
+                System.Threading.Thread.Sleep(500);
+                Console.Clear();
+            }
         }
         public Cell FindCell(int rowLocation, int columnLocation)
         {
@@ -81,41 +106,21 @@ namespace GameOfLife
         }
         private void AddNeighboursAboveRowToList(int currentCellRowLocation, int currentCellColumnLocation, List<Cell> neighbourCells)
         {
-            // Fix this out of bounds logic
-            System.Console.WriteLine("Hit");
-            if(currentCellRowLocation + 1 > Rows.Count)
-            {
-                currentCellRowLocation = 0;
-            }
-            else if(currentCellRowLocation - 1 < 1)
-            {
-                currentCellRowLocation = Rows.Count + 1;
-            }
-
-            if(currentCellColumnLocation + 1 > Columns.Count)
-            {
-                currentCellColumnLocation = 0;
-            }
-            else if(currentCellColumnLocation - 1 < 1)
-            {
-                currentCellColumnLocation = Columns.Count + 1;
-            }
-            System.Console.WriteLine($"Row should be 0: {currentCellRowLocation}");
-            System.Console.WriteLine($"Column should is : {currentCellColumnLocation}");
-            neighbourCells.Add(FindCell(currentCellRowLocation + 1, currentCellColumnLocation - 1));
-            neighbourCells.Add(FindCell(currentCellRowLocation + 1, currentCellColumnLocation));
-            neighbourCells.Add(FindCell(currentCellRowLocation + 1, currentCellColumnLocation + 1));
+            AddCellToNeighbourList(currentCellRowLocation + 1, currentCellColumnLocation - 1, neighbourCells);
+            AddCellToNeighbourList(currentCellRowLocation + 1, currentCellColumnLocation, neighbourCells);
+            AddCellToNeighbourList(currentCellRowLocation + 1, currentCellColumnLocation + 1, neighbourCells);
         }
         private void AddNeighboursSameRowToList(int currentCellRowLocation, int currentCellColumnLocation, List<Cell> neighbourCells)
         {
-            neighbourCells.Add(FindCell(currentCellRowLocation, currentCellColumnLocation - 1));
-            neighbourCells.Add(FindCell(currentCellRowLocation, currentCellColumnLocation + 1));
+            AddCellToNeighbourList(currentCellRowLocation, currentCellColumnLocation - 1, neighbourCells);
+            AddCellToNeighbourList(currentCellRowLocation, currentCellColumnLocation + 1, neighbourCells);
+            
         }
         private void AddNeighboursBelowRowToList(int currentCellRowLocation, int currentCellColumnLocation, List<Cell> neighbourCells)
         {
-            neighbourCells.Add(FindCell(currentCellRowLocation - 1, currentCellColumnLocation - 1));
-            neighbourCells.Add(FindCell(currentCellRowLocation - 1, currentCellColumnLocation));
-            neighbourCells.Add(FindCell(currentCellRowLocation - 1, currentCellColumnLocation + 1));
+            AddCellToNeighbourList(currentCellRowLocation - 1, currentCellColumnLocation - 1, neighbourCells);
+            AddCellToNeighbourList(currentCellRowLocation - 1, currentCellColumnLocation, neighbourCells);
+            AddCellToNeighbourList(currentCellRowLocation - 1, currentCellColumnLocation + 1, neighbourCells);
         }
         private int CountAllLivingCell(List<Cell> neighbourCells)
         {
@@ -128,6 +133,44 @@ namespace GameOfLife
                 }
             }
             return livingNeighboursCounter;
+        }
+
+        private void AddCellToNeighbourList(int currentCellRowLocation, int currentCellColumnLocation, List<Cell> neighbourCells)
+        {
+            currentCellRowLocation = AdjustForOutOfBoundsRow(currentCellRowLocation);
+            currentCellColumnLocation = AdjustForOutOfBoundsColumn(currentCellColumnLocation);
+            neighbourCells.Add(FindCell(currentCellRowLocation, currentCellColumnLocation));
+        }
+
+        // Can refactor for DRY
+        private int AdjustForOutOfBoundsRow(int rowLocation)
+        {
+            if(rowLocation > Rows.Count)
+            {
+                return 1;
+            }
+            
+            if(rowLocation < 1)
+            {
+                return Rows.Count;
+            }
+
+            return rowLocation;
+        }
+
+        private int AdjustForOutOfBoundsColumn(int columnLocation)
+        {
+            if(columnLocation > Columns.Count)
+            {
+                return 1;
+            }
+            
+            if(columnLocation < 1)
+            {
+                return Columns.Count;
+            }
+
+            return columnLocation;
         }
 
     }
