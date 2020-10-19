@@ -24,6 +24,7 @@ namespace GameOfLife
         {
             while(true)
             {
+                Console.Clear();
                 ConsoleParser.DisplayWorldGrid(Cells, Columns.Count);
                 // TODO: DRY issue
                 foreach(Cell cell in Cells)
@@ -36,7 +37,6 @@ namespace GameOfLife
                     EvolutionHandler.Evolve(cell);
                 }
                 System.Threading.Thread.Sleep(500);
-                Console.Clear();
             }
         }
         public Cell FindCell(int rowLocation, int columnLocation)
