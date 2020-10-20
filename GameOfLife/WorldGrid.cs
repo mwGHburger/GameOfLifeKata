@@ -26,7 +26,7 @@ namespace GameOfLife
             {
                 Console.Clear();
                 ConsoleParser.DisplayWorldGrid(Cells, ColumnLength);
-                // TODO: DRY issue
+                // TODO: DRY issue - can refactor this
                 foreach(Cell cell in Cells)
                 {
                     DetermineNextEvolution(cell);
@@ -75,29 +75,34 @@ namespace GameOfLife
         private int CalculateNumberOfLivingNeighbours(Cell cell)
         {
             // TODO: Can make it more efficient by storing neighbours as Cell property
-            // TODO: make neighbouring cells into a list and make the addneighbours method into one method that takes the list
-            var neighbours = new List<Cell>();
-            AddNeighboursAboveRowToList(cell.RowLocation,cell.ColumnLocation, neighbours);
-            AddNeighboursSameRowToList(cell.RowLocation,cell.ColumnLocation, neighbours);
-            AddNeighboursBelowRowToList(cell.RowLocation,cell.ColumnLocation, neighbours);
+            var currentCellRow = cell.RowLocation;
+            var currentCellColumn = cell.ColumnLocation;
+            var neighbourCellLocations = new List<List<int>>()
+            {
+                new List<int>() {currentCellRow + 1, currentCellColumn - 1},
+                new List<int>() {currentCellRow + 1, currentCellColumn},
+                new List<int>() {currentCellRow + 1, currentCellColumn + 1},
+                new List<int>() {currentCellRow, currentCellColumn - 1},
+                new List<int>() {currentCellRow, currentCellColumn + 1},
+                new List<int>() {currentCellRow - 1, currentCellColumn - 1},
+                new List<int>() {currentCellRow - 1, currentCellColumn},
+                new List<int>() {currentCellRow - 1, currentCellColumn + 1}
+            };
+            var neighbours = CreateCellNeighbourList(neighbourCellLocations);
+            
             return CountAllLivingCell(neighbours);
         }
-        private void AddNeighboursAboveRowToList(int currentCellRow, int currentCellColumn, List<Cell> neighbourCells)
+
+        private List<Cell> CreateCellNeighbourList(List<List<int>> neighbourCellLocations)
         {
-            AddCellToNeighbourList(currentCellRow + 1, currentCellColumn - 1, neighbourCells);
-            AddCellToNeighbourList(currentCellRow + 1, currentCellColumn, neighbourCells);
-            AddCellToNeighbourList(currentCellRow + 1, currentCellColumn + 1, neighbourCells);
-        }
-        private void AddNeighboursSameRowToList(int currentCellRow, int currentCellColumn, List<Cell> neighbourCells)
-        {
-            AddCellToNeighbourList(currentCellRow, currentCellColumn - 1, neighbourCells);
-            AddCellToNeighbourList(currentCellRow, currentCellColumn + 1, neighbourCells);
-        }
-        private void AddNeighboursBelowRowToList(int currentCellRow, int currentCellColumn, List<Cell> neighbourCells)
-        {
-            AddCellToNeighbourList(currentCellRow - 1, currentCellColumn - 1, neighbourCells);
-            AddCellToNeighbourList(currentCellRow - 1, currentCellColumn, neighbourCells);
-            AddCellToNeighbourList(currentCellRow - 1, currentCellColumn + 1, neighbourCells);
+            var neighbourCells = new List<Cell>();
+            foreach(List<int> neighbourLocation in neighbourCellLocations)
+            {
+                var cellRow = AdjustForOutOfBounds(neighbourLocation[0], RowLength);
+                var cellColumn = AdjustForOutOfBounds(neighbourLocation[1], ColumnLength);
+                neighbourCells.Add(FindCell(cellRow, cellColumn));
+            }
+            return neighbourCells;
         }
         private int CountAllLivingCell(List<Cell> neighbourCells)
         {
@@ -107,13 +112,6 @@ namespace GameOfLife
                 livingNeighboursCounter += (neighbourCell.IsLiving) ? 1 : 0;
             }
             return livingNeighboursCounter;
-        }
-
-        private void AddCellToNeighbourList(int currentCellRow, int currentCellColumn, List<Cell> neighbourCells)
-        {
-            currentCellRow = AdjustForOutOfBounds(currentCellRow, RowLength);
-            currentCellColumn = AdjustForOutOfBounds(currentCellColumn, ColumnLength);
-            neighbourCells.Add(FindCell(currentCellRow, currentCellColumn));
         }
 
         private int AdjustForOutOfBounds(int location, int length)
