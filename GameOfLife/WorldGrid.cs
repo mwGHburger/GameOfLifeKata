@@ -111,40 +111,24 @@ namespace GameOfLife
 
         private void AddCellToNeighbourList(int currentCellRow, int currentCellColumn, List<Cell> neighbourCells)
         {
-            currentCellRow = AdjustForOutOfBoundsRow(currentCellRow);
-            currentCellColumn = AdjustForOutOfBoundsColumn(currentCellColumn);
+            currentCellRow = AdjustForOutOfBounds(currentCellRow, RowLength);
+            currentCellColumn = AdjustForOutOfBounds(currentCellColumn, ColumnLength);
             neighbourCells.Add(FindCell(currentCellRow, currentCellColumn));
         }
 
-        // Can refactor for DRY
-        private int AdjustForOutOfBoundsRow(int rowLocation)
+        private int AdjustForOutOfBounds(int location, int length)
         {
-            if(rowLocation > RowLength)
+            if(location > length)
             {
                 return 1;
             }
             
-            if(rowLocation < 1)
+            if(location < 1)
             {
-                return RowLength;
+                return length;
             }
 
-            return rowLocation;
-        }
-
-        private int AdjustForOutOfBoundsColumn(int columnLocation)
-        {
-            if(columnLocation > ColumnLength)
-            {
-                return 1;
-            }
-            
-            if(columnLocation < 1)
-            {
-                return ColumnLength;
-            }
-
-            return columnLocation;
+            return location;
         }
 
     }
