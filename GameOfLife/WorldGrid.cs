@@ -36,6 +36,8 @@ namespace GameOfLife
             var cell = Cells.Find(x => x.RowLocation == rowLocation && x.ColumnLocation == columnLocation);
             return cell;
         }
+        
+        // TODO: Responsibility should be given to the EvolutionHandler Class
         public void DetermineNextEvolution(Cell cell)
         {
             var livingNeighbours = CalculateNumberOfLivingNeighbours(cell);
@@ -79,7 +81,7 @@ namespace GameOfLife
             }
         }
         
-        // TODO: Can move this out to its own class, there are too many responsibilities in this class
+        // TODO: Responsibility should be given to a NeighbourCellsHandler Class
         private int CalculateNumberOfLivingNeighbours(Cell cell)
         {
             // TODO: Can make it more efficient by storing neighbours as Cell property
