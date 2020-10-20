@@ -118,12 +118,13 @@ namespace GameOfLife
 
         private int AdjustForOutOfBounds(int location, int length)
         {
+            var firstLocation = 1;
             if(location > length)
             {
-                return 1;
+                return firstLocation;
             }
             
-            if(location < 1)
+            if(location < firstLocation)
             {
                 return length;
             }
