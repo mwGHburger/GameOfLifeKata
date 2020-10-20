@@ -22,7 +22,7 @@ namespace GameOfLife.Tests
             var mockConsoleWrapper = new Mock<IConsoleWrapper>();
             var consolParser = new ConsoleParser(mockConsoleWrapper.Object);
 
-            consolParser.DisplayWorldGrid(world.Cells, world.Columns.Count);
+            consolParser.DisplayWorldGrid(world.Cells, world.ColumnLength);
 
             mockConsoleWrapper.Verify(x => x.Write("       \n  * *  \n  * *  \n       \n"));
         }

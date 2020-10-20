@@ -22,7 +22,7 @@ namespace GameOfLife
             foreach(Cell cell in cells)
             {
                 gridString += (cell.IsLiving) ? "*" : " ";
-                gridString += (cell.Column.Location == maxColumns) ? "\n" : " ";
+                gridString += (cell.ColumnLocation == maxColumns) ? "\n" : " ";
             }
             return gridString;
         }

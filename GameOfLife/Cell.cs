@@ -4,31 +4,17 @@ namespace GameOfLife
 {
     public class Cell
     {
-        // TODO: Delete ROW and Column, not needed
-        public Row Row { get; }
-        public Column Column { get; }
         public int RowLocation { get; }
         public int ColumnLocation { get; }
         public bool IsLiving { get; set; }
-        public string NextEvolution { get; set; }
+        public bool isNextEvolutionLiving { get; set; }
         
-        public Cell(Row row, Column column, bool isLiving = false, string nextEvolution = "dead")
-        {
-            // TODO: refactor ROW and COLUMN
-            Row = row;
-            Column = column;
-            RowLocation = row.Location;
-            ColumnLocation = column.Location;
-            IsLiving = isLiving;
-            NextEvolution = nextEvolution;
-        }
-
-        // OVERLOAD: This is made for seeds
-        public Cell(int rowLocation, int columnLocation)
+        public Cell(int rowLocation, int columnLocation, bool isLiving = false, bool isNextEvolution = false)
         {
             RowLocation = rowLocation;
             ColumnLocation = columnLocation;
+            IsLiving = isLiving;
+            isNextEvolutionLiving = isNextEvolution;
         }
-
     }
 }

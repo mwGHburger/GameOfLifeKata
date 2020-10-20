@@ -4,13 +4,12 @@ namespace GameOfLife
     {
         public void Evolve(Cell cell)
         {
-            if (cell.NextEvolution == "living")
+            if (cell.isNextEvolutionLiving)
             {
                 cell.IsLiving = true;
                 return;
             }   
-            
-            if(cell.NextEvolution == "dead")
+            else
             {
                 cell.IsLiving = false;
                 return;

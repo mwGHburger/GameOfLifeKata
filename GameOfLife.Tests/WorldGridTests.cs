@@ -19,8 +19,8 @@ namespace GameOfLife.Tests
         { 
             var world = new WorldGrid(rowLength: 5, columnLength: 8, initialSeed: defaultSeed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             
-            Assert.Equal(5, world.Rows.Count);
-            Assert.Equal(8, world.Columns.Count);
+            Assert.Equal(5, world.RowLength);
+            Assert.Equal(8, world.ColumnLength);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace GameOfLife.Tests
 
             world.DetermineNextEvolution(cell);
 
-            Assert.Equal("dead", cell.NextEvolution);
+            Assert.False(cell.isNextEvolutionLiving);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace GameOfLife.Tests
 
             world.DetermineNextEvolution(cell);
 
-            Assert.Equal("dead", cell.NextEvolution);
+            Assert.False(cell.isNextEvolutionLiving);
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace GameOfLife.Tests
             
             world.DetermineNextEvolution(cell);
 
-            Assert.Equal("living", cell.NextEvolution);
+            Assert.True(cell.isNextEvolutionLiving);
         }
 
         [Fact]
@@ -147,7 +147,7 @@ namespace GameOfLife.Tests
             
             world.DetermineNextEvolution(cell);
 
-            Assert.Equal("living", cell.NextEvolution);
+            Assert.True(cell.isNextEvolutionLiving);
         }
 
         [Fact]
@@ -166,7 +166,7 @@ namespace GameOfLife.Tests
             
             world.DetermineNextEvolution(cell);
 
-            Assert.Equal("dead", cell.NextEvolution);
+            Assert.False(cell.isNextEvolutionLiving);
         }
 
         [Fact]
@@ -185,7 +185,7 @@ namespace GameOfLife.Tests
 
             world.DetermineNextEvolution(cell);
 
-            Assert.Equal("dead", cell.NextEvolution);
+            Assert.False(cell.isNextEvolutionLiving);
         }
 
         [Fact]
@@ -207,7 +207,7 @@ namespace GameOfLife.Tests
 
             world.DetermineNextEvolution(cell);
 
-            Assert.Equal("dead", cell.NextEvolution);
+            Assert.False(cell.isNextEvolutionLiving);
         }
 
         [Fact]
@@ -228,7 +228,7 @@ namespace GameOfLife.Tests
 
             world.DetermineNextEvolution(cell);
 
-            Assert.Equal("living", cell.NextEvolution);
+            Assert.True(cell.isNextEvolutionLiving);
         }
 
         [Fact]
@@ -248,7 +248,7 @@ namespace GameOfLife.Tests
             
             world.DetermineNextEvolution(cell);
 
-            Assert.Equal("living", cell.NextEvolution);
+            Assert.True(cell.isNextEvolutionLiving);
         }
 
         [Fact]
@@ -267,7 +267,7 @@ namespace GameOfLife.Tests
             
             world.DetermineNextEvolution(cell);
 
-            Assert.Equal("dead", cell.NextEvolution);
+            Assert.False(cell.isNextEvolutionLiving);
         }
     }
 }

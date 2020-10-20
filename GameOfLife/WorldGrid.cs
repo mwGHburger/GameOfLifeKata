@@ -5,15 +5,15 @@ namespace GameOfLife
 {
     public class WorldGrid
     {
-        public List<Row> Rows { get; } = new List<Row>();
-        public List<Column> Columns { get;} = new List<Column>();
+        public int RowLength { get; }
+        public int ColumnLength { get; }
         public List<Cell> Cells { get;} = new List<Cell>();
         public IEvolutionHandler EvolutionHandler { get; }
         public ConsoleParser ConsoleParser { get; }
         public WorldGrid(int rowLength, int columnLength, List<Cell> initialSeed, IEvolutionHandler evolutionHandler, ConsoleParser consoleParser)
         {
-            CreateRows(rowLength);
-            CreateColumns(columnLength);
+            RowLength = rowLength;
+            ColumnLength = columnLength;
             CreateCells();
             PlantSeed(initialSeed);
             EvolutionHandler = evolutionHandler;
@@ -25,7 +25,7 @@ namespace GameOfLife
             while(true)
             {
                 Console.Clear();
-                ConsoleParser.DisplayWorldGrid(Cells, Columns.Count);
+                ConsoleParser.DisplayWorldGrid(Cells, ColumnLength);
                 // TODO: DRY issue
                 foreach(Cell cell in Cells)
                 {
@@ -48,33 +48,16 @@ namespace GameOfLife
         {
             var livingNeighbours = CalculateNumberOfLivingNeighbours(cell);
             var conditionForNextEvolutionToBeLiving = cell.IsLiving && (livingNeighbours == 2 || livingNeighbours == 3) || !cell.IsLiving && (livingNeighbours == 3);
-            // TODO: consider making it bool, can change property name to isNextEvolutionLiving
-            cell.NextEvolution = (conditionForNextEvolutionToBeLiving) ? "living" : "dead";
-        }
-
-        private void CreateRows(int rowLength)
-        {
-            for(int i = 1; i <= rowLength; i++)
-            {
-                Rows.Add(new Row(location: i));
-            }
-        }
-
-        private void CreateColumns(int columnLength)
-        {
-            for(int i = 1; i <= columnLength; i++)
-            {
-                Columns.Add(new Column(location: i));
-            }
+            cell.isNextEvolutionLiving = conditionForNextEvolutionToBeLiving;
         }
 
         private void CreateCells()
         {
-            foreach(Row row in Rows)
+            for(int rowLocation = 1; rowLocation <= RowLength; rowLocation++)
             {
-                foreach (Column column in Columns)
+                for (int columnLocation = 1; columnLocation <= ColumnLength; columnLocation++)
                 {
-                    Cells.Add(new Cell(row: row, column: column));
+                    Cells.Add(new Cell(rowLocation: rowLocation, columnLocation: columnLocation));
                 }
             }
         }
@@ -136,14 +119,14 @@ namespace GameOfLife
         // Can refactor for DRY
         private int AdjustForOutOfBoundsRow(int rowLocation)
         {
-            if(rowLocation > Rows.Count)
+            if(rowLocation > RowLength)
             {
                 return 1;
             }
             
             if(rowLocation < 1)
             {
-                return Rows.Count;
+                return RowLength;
             }
 
             return rowLocation;
@@ -151,14 +134,14 @@ namespace GameOfLife
 
         private int AdjustForOutOfBoundsColumn(int columnLocation)
         {
-            if(columnLocation > Columns.Count)
+            if(columnLocation > ColumnLength)
             {
                 return 1;
             }
             
             if(columnLocation < 1)
             {
-                return Columns.Count;
+                return ColumnLength;
             }
 
             return columnLocation;

@@ -10,7 +10,7 @@ namespace GameOfLife.Tests
         public void EvolveShouldChangeTheCellStateToLiving_GivenItsNextEvolutionIsLiving()
         {
             cell.IsLiving = false;
-            cell.NextEvolution = "living";
+            cell.isNextEvolutionLiving = true;
 
             evolutionHandler.Evolve(cell);
 
@@ -21,7 +21,7 @@ namespace GameOfLife.Tests
         public void EvolveShouldChangeTheCellStateToDead_GivenItsNextEvolutionIsDead()
         {
             cell.IsLiving = true;
-            cell.NextEvolution = "dead";
+            cell.isNextEvolutionLiving = false;
 
             evolutionHandler.Evolve(cell);
 
