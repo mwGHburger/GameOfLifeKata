@@ -5,15 +5,15 @@ namespace GameOfLife
 {
     public class WorldGrid
     {
-        public int RowLength { get; }
-        public int ColumnLength { get; }
+        public int NumberOfRows { get; }
+        public int NumberOfColumns { get; }
         public List<Cell> Cells { get;} = new List<Cell>();
         public IEvolutionHandler EvolutionHandler { get; }
         public ConsoleParser ConsoleParser { get; }
-        public WorldGrid(int rowLength, int columnLength, List<Cell> initialSeed, IEvolutionHandler evolutionHandler, ConsoleParser consoleParser)
+        public WorldGrid(int numberOfRows, int numberOfColumns, List<Cell> initialSeed, IEvolutionHandler evolutionHandler, ConsoleParser consoleParser)
         {
-            RowLength = rowLength;
-            ColumnLength = columnLength;
+            NumberOfRows = numberOfRows;
+            NumberOfColumns = numberOfColumns;
             CreateCells();
             PlantSeed(initialSeed);
             EvolutionHandler = evolutionHandler;
@@ -25,17 +25,9 @@ namespace GameOfLife
             while(true)
             {
                 Console.Clear();
-                ConsoleParser.DisplayWorldGrid(Cells, ColumnLength);
-                // TODO: DRY issue - can refactor this
-                foreach(Cell cell in Cells)
-                {
-                    DetermineNextEvolution(cell);
-                }
-
-                foreach(Cell cell in Cells)
-                {
-                    EvolutionHandler.Evolve(cell);
-                }
+                ConsoleParser.DisplayWorldGrid(Cells, NumberOfColumns);
+                DetermineNextEvolutionForEachCell();
+                EvolveEachCell();
                 System.Threading.Thread.Sleep(500);
             }
         }
@@ -51,11 +43,27 @@ namespace GameOfLife
             cell.isNextEvolutionLiving = conditionForNextEvolutionToBeLiving;
         }
 
+        private void DetermineNextEvolutionForEachCell()
+        {
+            foreach(Cell cell in Cells)
+            {
+                DetermineNextEvolution(cell);
+            }
+        }
+
+        private void EvolveEachCell()
+        {
+            foreach(Cell cell in Cells)
+            {
+                EvolutionHandler.Evolve(cell);
+            }
+        }
+
         private void CreateCells()
         {
-            for(int rowLocation = 1; rowLocation <= RowLength; rowLocation++)
+            for(int rowLocation = 1; rowLocation <= NumberOfRows; rowLocation++)
             {
-                for (int columnLocation = 1; columnLocation <= ColumnLength; columnLocation++)
+                for (int columnLocation = 1; columnLocation <= NumberOfColumns; columnLocation++)
                 {
                     Cells.Add(new Cell(rowLocation: rowLocation, columnLocation: columnLocation));
                 }
@@ -92,15 +100,16 @@ namespace GameOfLife
             
             return CountAllLivingCell(neighbours);
         }
-
         private List<Cell> CreateCellNeighbourList(List<List<int>> neighbourCellLocations)
         {
             var neighbourCells = new List<Cell>();
             foreach(List<int> neighbourLocation in neighbourCellLocations)
             {
-                var cellRow = AdjustForOutOfBounds(neighbourLocation[0], RowLength);
-                var cellColumn = AdjustForOutOfBounds(neighbourLocation[1], ColumnLength);
-                neighbourCells.Add(FindCell(cellRow, cellColumn));
+                var cellRowLocation = neighbourLocation[0];
+                var cellColumnLocation = neighbourLocation[1];
+                cellRowLocation = AdjustForOutOfBounds(cellRowLocation, NumberOfRows);
+                cellColumnLocation = AdjustForOutOfBounds(cellColumnLocation, NumberOfColumns);
+                neighbourCells.Add(FindCell(cellRowLocation, cellColumnLocation));
             }
             return neighbourCells;
         }
@@ -113,7 +122,6 @@ namespace GameOfLife
             }
             return livingNeighboursCounter;
         }
-
         private int AdjustForOutOfBounds(int location, int length)
         {
             var firstLocation = 1;

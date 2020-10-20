@@ -17,7 +17,7 @@ namespace GameOfLife
             };
             var evolutionHandler = new EvolutionHandler();
             var consoleParser = new ConsoleParser(new ConsoleWrapper());
-            var world = new WorldGrid(rowLength: 20, columnLength: 20, initialSeed: seed, evolutionHandler: evolutionHandler, consoleParser: consoleParser);
+            var world = new WorldGrid(numberOfRows: 20, numberOfColumns: 20, initialSeed: seed, evolutionHandler: evolutionHandler, consoleParser: consoleParser);
             world.Run();
         }
     }

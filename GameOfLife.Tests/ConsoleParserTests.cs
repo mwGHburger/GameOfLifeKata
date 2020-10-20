@@ -18,11 +18,11 @@ namespace GameOfLife.Tests
             };
             var mockEvolutionHandler = new Mock<IEvolutionHandler>();
             var consoleParser = new ConsoleParser(new ConsoleWrapper());
-            var world = new WorldGrid(rowLength: 4, columnLength: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
+            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
             var mockConsoleWrapper = new Mock<IConsoleWrapper>();
             var consolParser = new ConsoleParser(mockConsoleWrapper.Object);
 
-            consolParser.DisplayWorldGrid(world.Cells, world.ColumnLength);
+            consolParser.DisplayWorldGrid(world.Cells, world.NumberOfColumns);
 
             mockConsoleWrapper.Verify(x => x.Write("       \n  * *  \n  * *  \n       \n"));
         }
