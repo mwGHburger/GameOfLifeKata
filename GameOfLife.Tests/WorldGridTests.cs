@@ -7,59 +7,47 @@ namespace GameOfLife.Tests
 {
     public class WorldGridTests
     {
-        List<Cell> defaultSeed = new List<Cell>()
-            {
-                new Cell(2,2),
-            };
-        Mock<IEvolutionHandler> mockEvolutionHandler = new Mock<IEvolutionHandler>();
-        ConsoleParser consoleParser = new ConsoleParser(new ConsoleWrapper());
+        List<ICell> defaultSeed = new List<ICell>()
+        {
+            new Cell(2,2),
+        };
+        
 
         [Fact]
         public void ShouldCreateRowsandColumnsInWorldGrid()
-        { 
-            var world = new WorldGrid(numberOfRows: 5, numberOfColumns: 8, initialSeed: defaultSeed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
+        {   
+            var world = SetupWorldGrid(8,8, defaultSeed);
             
-            Assert.Equal(5, world.NumberOfRows);
+            Assert.Equal(8, world.NumberOfRows);
             Assert.Equal(8, world.NumberOfColumns);
         }
 
         [Fact]
         public void ShouldCreatCellsInWorldGrid()
         {
-            var world = new WorldGrid(numberOfRows: 6, numberOfColumns: 6, initialSeed: defaultSeed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
+            var world = SetupWorldGrid(6,6,defaultSeed);
+            var cellPopulation = world.Cells.Population;
 
-            Assert.Equal(36, world.Cells.Count);
-        }
-
-        [Theory]
-        [InlineData(4,4,2,3,2,3)]
-        public void ShouldReturnCell_GivenRowAndColumn(int rowLength, int columnLength, int rowLocation, int columnLocation, int expectedRowLocation, int expectedColumnLocation)
-        {
-            var world = new WorldGrid(numberOfRows: rowLength, numberOfColumns: columnLength, initialSeed: defaultSeed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-
-            var actual = world.FindCell(rowLocation,columnLocation);
-
-            Assert.IsType<Cell>(actual);
-            Assert.Equal(expectedRowLocation, actual.RowLocation);
-            Assert.Equal(expectedColumnLocation, actual.ColumnLocation);
+            Assert.Equal(36, cellPopulation.Count);
         }
         
         [Fact]
         public void ShouldPlantSeedIntoWorld()
         {
-            var seed = new List<Cell>()
+            var seed = new List<ICell>()
             {
                 new Cell(2,2),
                 new Cell(2,3),
                 new Cell(3,2),
                 new Cell(3,3)
             };
-            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-            var cell_1 = world.FindCell(2,2);
-            var cell_2 = world.FindCell(2,3);
-            var cell_3 = world.FindCell(3,2);
-            var cell_4 = world.FindCell(3,3);
-            var cell_5 = world.FindCell(1,1);
+            var world = SetupWorldGrid(4,4, seed);
+            var cells = world.Cells;
+            var cell_1 = cells.Find(2,2);
+            var cell_2 = cells.Find(2,3);
+            var cell_3 = cells.Find(3,2);
+            var cell_4 = cells.Find(3,3);
+            var cell_5 = cells.Find(1,1);
 
             Assert.True(cell_1.IsLiving);
             Assert.True(cell_2.IsLiving);
@@ -68,206 +56,26 @@ namespace GameOfLife.Tests
             Assert.False(cell_5.IsLiving);
         }
 
-        [Fact]
-        public void LivingCellShouldDie_WhenNeighboursIsLessThan2()
+        private WorldGrid SetupWorldGrid(int numberOfRows, int numberOfColumns, List<ICell> initialSeed)
         {
-            var seed = new List<Cell>()
-            {
-                new Cell(2,2),
-                new Cell(2,3),
-            };
-            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-            
-            var cell = world.FindCell(2,2);
-            
-            Assert.True(cell.IsLiving);
+            var mockEvolutionHandler = new Mock<IEvolutionHandler>();
+            var mockConsoleParser = new Mock<IConsoleParser>();
+            var mockCellNeighbourHandler = new Mock<ICellNeighbourHandler>();
+            // var mockCells = new Mock<ICells>();
+            var cells = new Cells();
 
-            world.DetermineNextEvolution(cell);
+            var world = new WorldGrid(
+                numberOfRows: numberOfRows, 
+                numberOfColumns: numberOfColumns, 
+                initialSeed: initialSeed, 
+                evolutionHandler: mockEvolutionHandler.Object, 
+                consoleParser: mockConsoleParser.Object, 
+                cellNeighbourHandler: mockCellNeighbourHandler.Object, 
+                cells: cells
+            );
 
-            Assert.False(cell.isNextEvolutionLiving);
+            return world;
         }
 
-        [Fact]
-        public void LivingCellShouldDie_WhenNeighboursMoreThan3()
-        {
-            var seed = new List<Cell>()
-            {
-                new Cell(2,2),
-                new Cell(2,3),
-                new Cell(3,1),
-                new Cell(3,2),
-                new Cell(3,3)
-            };
-            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-            
-            var cell = world.FindCell(2,2);
-            
-            Assert.True(cell.IsLiving);
-
-            world.DetermineNextEvolution(cell);
-
-            Assert.False(cell.isNextEvolutionLiving);
-        }
-
-        [Fact]
-        public void LivingCellShouldLive_WhenNeighboursIs2Or3()
-        {
-            var seed = new List<Cell>()
-            {
-                new Cell(2,2),
-                new Cell(2,3),
-                new Cell(3,2),
-                new Cell(3,3)
-            };
-            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-            
-            var cell = world.FindCell(2,2);
-            
-            Assert.True(cell.IsLiving);
-            
-            world.DetermineNextEvolution(cell);
-
-            Assert.True(cell.isNextEvolutionLiving);
-        }
-
-        [Fact]
-        public void DeadCellShouldBecomeLiving_WhenNeighboursIs3()
-        {
-            var seed = new List<Cell>()
-            {
-                new Cell(2,3),
-                new Cell(3,2),
-                new Cell(3,3)
-            };
-            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-            
-            var cell = world.FindCell(2,2);
-            
-            Assert.False(cell.IsLiving);
-            
-            world.DetermineNextEvolution(cell);
-
-            Assert.True(cell.isNextEvolutionLiving);
-        }
-
-        [Fact]
-        public void DeadCellShouldNotBecomeLiving_WhenNeighboursIs2()
-        {
-            var seed = new List<Cell>()
-            {
-                new Cell(2,3),
-                new Cell(3,2),
-            };
-            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-            
-            var cell = world.FindCell(2,2);
-            
-            Assert.False(cell.IsLiving);
-            
-            world.DetermineNextEvolution(cell);
-
-            Assert.False(cell.isNextEvolutionLiving);
-        }
-
-        [Fact]
-        public void LivingCellShouldDie_WhenNeighboursIsLessThan2_WhenOutOfBounds()
-        {
-            var seed = new List<Cell>()
-            {
-                new Cell(4,4),
-                new Cell(1,1),
-            };
-            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-            
-            var cell = world.FindCell(4,4);
-            
-            Assert.True(cell.IsLiving);
-
-            world.DetermineNextEvolution(cell);
-
-            Assert.False(cell.isNextEvolutionLiving);
-        }
-
-        [Fact]
-        public void LivingCellShouldDie_WhenNeighboursMoreThan3_WhenOutOfBounds()
-        {
-            var seed = new List<Cell>()
-            {
-                new Cell(4,3),
-                new Cell(3,4),
-                new Cell(1,1),
-                new Cell(3,3),
-                new Cell(4,4)
-            };
-            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-            
-            var cell = world.FindCell(4,4);
-            
-            Assert.True(cell.IsLiving);
-
-            world.DetermineNextEvolution(cell);
-
-            Assert.False(cell.isNextEvolutionLiving);
-        }
-
-        [Fact]
-        public void LivingCellShouldLive_WhenNeighboursIs2Or3_WhenOutOfBounds()
-        {
-            var seed = new List<Cell>()
-            {
-                new Cell(1,1),
-                new Cell(1,2),
-                new Cell(2,1),
-                new Cell(4,4)
-            };
-            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-            
-            var cell = world.FindCell(1,1);
-            
-            Assert.True(cell.IsLiving);
-
-            world.DetermineNextEvolution(cell);
-
-            Assert.True(cell.isNextEvolutionLiving);
-        }
-
-        [Fact]
-        public void DeadCellShouldBecomeLiving_WhenNeighboursIs3_WhenOutOfBounds()
-        {
-            var seed = new List<Cell>()
-            {
-                new Cell(4,3),
-                new Cell(3,3),
-                new Cell(3,4)
-            };
-            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-            
-            var cell = world.FindCell(4,4);
-            
-            Assert.False(cell.IsLiving);
-            
-            world.DetermineNextEvolution(cell);
-
-            Assert.True(cell.isNextEvolutionLiving);
-        }
-
-        [Fact]
-        public void DeadCellShouldNotBecomeLiving_WhenNeighboursIs2_WhenOutOfBounds()
-        {
-            var seed = new List<Cell>()
-            {
-                new Cell(4,3),
-                new Cell(1,1),
-            };
-            var world = new WorldGrid(numberOfRows: 4, numberOfColumns: 4, initialSeed: seed, evolutionHandler: mockEvolutionHandler.Object, consoleParser: consoleParser);
-            
-            var cell = world.FindCell(4,4);
-            
-            Assert.False(cell.IsLiving);
-            
-            world.DetermineNextEvolution(cell);
-
-            Assert.False(cell.isNextEvolutionLiving);
-        }
     }
 }

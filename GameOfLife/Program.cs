@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace GameOfLife
@@ -7,7 +7,7 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            var seed = new List<Cell>()
+            var seed = new List<ICell>()
             {
                 new Cell(2,1),
                 new Cell(3,2),
@@ -16,8 +16,10 @@ namespace GameOfLife
                 new Cell(3,3)
             };
             var evolutionHandler = new EvolutionHandler();
+            var cellNeighbourHandler = new CellNeighbourHandler();
+            var cells = new Cells();
             var consoleParser = new ConsoleParser(new ConsoleWrapper());
-            var world = new WorldGrid(numberOfRows: 20, numberOfColumns: 20, initialSeed: seed, evolutionHandler: evolutionHandler, consoleParser: consoleParser);
+            var world = new WorldGrid(numberOfRows: 20, numberOfColumns: 20, initialSeed: seed, evolutionHandler: evolutionHandler, consoleParser: consoleParser, cellNeighbourHandler: cellNeighbourHandler, cells: cells);
             world.Run();
         }
     }

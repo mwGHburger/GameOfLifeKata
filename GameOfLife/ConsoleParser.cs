@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace GameOfLife
 {
-    public class ConsoleParser
+    public class ConsoleParser : IConsoleParser
     {
         public IConsoleWrapper ConsoleWrapper { get; }
         public ConsoleParser(IConsoleWrapper consoleWrapper)
@@ -10,19 +10,19 @@ namespace GameOfLife
             ConsoleWrapper = consoleWrapper;
         }
 
-        public void DisplayWorldGrid(List<Cell> cells, int maxColumns)
+        public void DisplayWorldGrid(ICells cells, int maxColumns)
         {
             var gridString = CreateWorldGridString(cells, maxColumns);
             ConsoleWrapper.Write(gridString);
         }
 
-        private string CreateWorldGridString(List<Cell> cells, int maxColumns)
+        private string CreateWorldGridString(ICells cells, int maxColumns)
         {
             var gridString = "";
-            foreach(Cell cell in cells)
+            foreach(ICell cell in cells.Population)
             {
-                gridString += (cell.IsLiving) ? "*" : " ";
-                gridString += (cell.ColumnLocation == maxColumns) ? "\n" : " ";
+                gridString += (cell.IsLiving) ? "*" : ".";
+                gridString += (cell.ColumnLocation.Equals(maxColumns)) ? "\n" : " ";
             }
             return gridString;
         }

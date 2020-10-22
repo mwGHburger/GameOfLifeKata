@@ -7,22 +7,27 @@ namespace GameOfLife
     {
         public int NumberOfRows { get; }
         public int NumberOfColumns { get; }
-        public List<Cell> Cells { get;} = new List<Cell>();
+        public ICells Cells { get; }
         public IEvolutionHandler EvolutionHandler { get; }
-        public ConsoleParser ConsoleParser { get; }
-        public WorldGrid(int numberOfRows, int numberOfColumns, List<Cell> initialSeed, IEvolutionHandler evolutionHandler, ConsoleParser consoleParser)
+        public IConsoleParser ConsoleParser { get; }
+        public ICellNeighbourHandler CellNeighbourHandler { get; }
+        private bool _running = true;
+
+        public WorldGrid(int numberOfRows, int numberOfColumns, List<ICell> initialSeed, IEvolutionHandler evolutionHandler, IConsoleParser consoleParser, ICellNeighbourHandler cellNeighbourHandler, ICells cells)
         {
+            EvolutionHandler = evolutionHandler;
+            ConsoleParser = consoleParser;
+            CellNeighbourHandler = cellNeighbourHandler;
+            Cells = cells;
             NumberOfRows = numberOfRows;
             NumberOfColumns = numberOfColumns;
             CreateCells();
             PlantSeed(initialSeed);
-            EvolutionHandler = evolutionHandler;
-            ConsoleParser = consoleParser;
+            CellNeighbourHandler.FindNeighboursForEachCell(Cells, NumberOfRows, NumberOfColumns);
         }
-
         public void Run()
         {
-            while(true)
+            while(_running)
             {
                 Console.Clear();
                 ConsoleParser.DisplayWorldGrid(Cells, NumberOfColumns);
@@ -31,114 +36,39 @@ namespace GameOfLife
                 System.Threading.Thread.Sleep(500);
             }
         }
-        public Cell FindCell(int rowLocation, int columnLocation)
+        private void CreateCells()
         {
-            var cell = Cells.Find(x => x.RowLocation == rowLocation && x.ColumnLocation == columnLocation);
-            return cell;
-        }
-        
-        // TODO: Responsibility should be given to the EvolutionHandler Class
-        public void DetermineNextEvolution(Cell cell)
-        {
-            var livingNeighbours = CalculateNumberOfLivingNeighbours(cell);
-            var conditionForNextEvolutionToBeLiving = cell.IsLiving && (livingNeighbours == 2 || livingNeighbours == 3) || !cell.IsLiving && (livingNeighbours == 3);
-            cell.isNextEvolutionLiving = conditionForNextEvolutionToBeLiving;
-        }
-
-        private void DetermineNextEvolutionForEachCell()
-        {
-            foreach(Cell cell in Cells)
+            var startLocation = 1;
+            for(int rowLocation = startLocation; rowLocation <= NumberOfRows; rowLocation++)
             {
-                DetermineNextEvolution(cell);
+                for (int columnLocation = startLocation; columnLocation <= NumberOfColumns; columnLocation++)
+                {
+                    var cell = new Cell(rowLocation: rowLocation, columnLocation: columnLocation);
+                    Cells.Population.Add(cell);
+                }
             }
         }
-
+        private void PlantSeed(List<ICell> initialSeed)
+        {
+            foreach(ICell cell in initialSeed)
+            {
+                var selectedCell = Cells.Find(cell.RowLocation, cell.ColumnLocation);
+                selectedCell.IsLiving = true;
+            }
+        }
+        private void DetermineNextEvolutionForEachCell()
+        {
+            foreach(Cell cell in Cells.Population)
+            {
+                EvolutionHandler.DetermineNextEvolution(CellNeighbourHandler, cell);
+            }
+        }
         private void EvolveEachCell()
         {
-            foreach(Cell cell in Cells)
+            foreach(Cell cell in Cells.Population)
             {
                 EvolutionHandler.Evolve(cell);
             }
         }
-
-        private void CreateCells()
-        {
-            for(int rowLocation = 1; rowLocation <= NumberOfRows; rowLocation++)
-            {
-                for (int columnLocation = 1; columnLocation <= NumberOfColumns; columnLocation++)
-                {
-                    Cells.Add(new Cell(rowLocation: rowLocation, columnLocation: columnLocation));
-                }
-            }
-        }
-
-        private void PlantSeed(List<Cell> initialSeed)
-        {
-            foreach(Cell cell in initialSeed)
-            {
-                var selectedCell = FindCell(cell.RowLocation, cell.ColumnLocation);
-                selectedCell.IsLiving = true;
-            }
-        }
-        
-        // TODO: Responsibility should be given to a NeighbourCellsHandler Class
-        private int CalculateNumberOfLivingNeighbours(Cell cell)
-        {
-            // TODO: Can make it more efficient by storing neighbours as Cell property
-            var currentCellRow = cell.RowLocation;
-            var currentCellColumn = cell.ColumnLocation;
-            var neighbourCellLocations = new List<List<int>>()
-            {
-                new List<int>() {currentCellRow + 1, currentCellColumn - 1},
-                new List<int>() {currentCellRow + 1, currentCellColumn},
-                new List<int>() {currentCellRow + 1, currentCellColumn + 1},
-                new List<int>() {currentCellRow, currentCellColumn - 1},
-                new List<int>() {currentCellRow, currentCellColumn + 1},
-                new List<int>() {currentCellRow - 1, currentCellColumn - 1},
-                new List<int>() {currentCellRow - 1, currentCellColumn},
-                new List<int>() {currentCellRow - 1, currentCellColumn + 1}
-            };
-            var neighbours = CreateCellNeighbourList(neighbourCellLocations);
-            
-            return CountAllLivingCell(neighbours);
-        }
-        private List<Cell> CreateCellNeighbourList(List<List<int>> neighbourCellLocations)
-        {
-            var neighbourCells = new List<Cell>();
-            foreach(List<int> neighbourLocation in neighbourCellLocations)
-            {
-                var cellRowLocation = neighbourLocation[0];
-                var cellColumnLocation = neighbourLocation[1];
-                cellRowLocation = AdjustForOutOfBounds(cellRowLocation, NumberOfRows);
-                cellColumnLocation = AdjustForOutOfBounds(cellColumnLocation, NumberOfColumns);
-                neighbourCells.Add(FindCell(cellRowLocation, cellColumnLocation));
-            }
-            return neighbourCells;
-        }
-        private int CountAllLivingCell(List<Cell> neighbourCells)
-        {
-            var livingNeighboursCounter = 0;
-            foreach(Cell neighbourCell in neighbourCells)
-            {
-                livingNeighboursCounter += (neighbourCell.IsLiving) ? 1 : 0;
-            }
-            return livingNeighboursCounter;
-        }
-        private int AdjustForOutOfBounds(int location, int length)
-        {
-            var firstLocation = 1;
-            if(location > length)
-            {
-                return firstLocation;
-            }
-            
-            if(location < firstLocation)
-            {
-                return length;
-            }
-
-            return location;
-        }
-
     }
 }
