@@ -28,7 +28,7 @@ namespace GameOfLife.Tests
             mockNeighbourCell2.Setup(x => x.IsLiving).Returns(true);
             mockNeighbourCell3.Setup(x => x.IsLiving).Returns(false);
 
-            var actual = cellNeighbourHandler.CalculateNumberOfLivingNeighboursOfCell(mockCell.Object);
+            var actual = cellNeighbourHandler.CountNumberOfLivingNeighboursOfCell(mockCell.Object);
 
             Assert.Equal(expected, actual);
         }

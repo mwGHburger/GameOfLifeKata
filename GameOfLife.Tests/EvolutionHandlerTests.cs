@@ -36,7 +36,7 @@ namespace GameOfLife.Tests
         {
             evolutionHandler.DetermineNextEvolution(mockCellNeighbourHandler.Object,mockCell.Object);
 
-            mockCellNeighbourHandler.Verify(x => x.CalculateNumberOfLivingNeighboursOfCell(mockCell.Object));
+            mockCellNeighbourHandler.Verify(x => x.CountNumberOfLivingNeighboursOfCell(mockCell.Object));
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace GameOfLife.Tests
         {
             mockCell.Setup(x => x.IsLiving).Returns(true);
             mockCell.SetupProperty(x => x.isNextEvolutionLiving, false);
-            mockCellNeighbourHandler.Setup(x => x.CalculateNumberOfLivingNeighboursOfCell(It.IsAny<ICell>())).Returns(1);
+            mockCellNeighbourHandler.Setup(x => x.CountNumberOfLivingNeighboursOfCell(It.IsAny<ICell>())).Returns(1);
 
             evolutionHandler.DetermineNextEvolution(mockCellNeighbourHandler.Object,mockCell.Object);
 
@@ -57,7 +57,7 @@ namespace GameOfLife.Tests
         {
             mockCell.Setup(x => x.IsLiving).Returns(true);
             mockCell.SetupProperty(x => x.isNextEvolutionLiving, false);
-            mockCellNeighbourHandler.Setup(x => x.CalculateNumberOfLivingNeighboursOfCell(It.IsAny<ICell>())).Returns(4);
+            mockCellNeighbourHandler.Setup(x => x.CountNumberOfLivingNeighboursOfCell(It.IsAny<ICell>())).Returns(4);
 
             evolutionHandler.DetermineNextEvolution(mockCellNeighbourHandler.Object, mockCell.Object);
 
@@ -70,7 +70,7 @@ namespace GameOfLife.Tests
         {
             mockCell.Setup(x => x.IsLiving).Returns(true);
             mockCell.SetupProperty(x => x.isNextEvolutionLiving, false);
-            mockCellNeighbourHandler.Setup(x => x.CalculateNumberOfLivingNeighboursOfCell(It.IsAny<ICell>())).Returns(2);
+            mockCellNeighbourHandler.Setup(x => x.CountNumberOfLivingNeighboursOfCell(It.IsAny<ICell>())).Returns(2);
             
             evolutionHandler.DetermineNextEvolution(mockCellNeighbourHandler.Object, mockCell.Object);
 
@@ -83,7 +83,7 @@ namespace GameOfLife.Tests
         {
             mockCell.Setup(x => x.IsLiving).Returns(false);
             mockCell.SetupProperty(x => x.isNextEvolutionLiving, false);
-            mockCellNeighbourHandler.Setup(x => x.CalculateNumberOfLivingNeighboursOfCell(It.IsAny<ICell>())).Returns(3);
+            mockCellNeighbourHandler.Setup(x => x.CountNumberOfLivingNeighboursOfCell(It.IsAny<ICell>())).Returns(3);
 
             evolutionHandler.DetermineNextEvolution(mockCellNeighbourHandler.Object, mockCell.Object);
 
@@ -96,7 +96,7 @@ namespace GameOfLife.Tests
         {
             mockCell.Setup(x => x.IsLiving).Returns(false);
             mockCell.SetupProperty(x => x.isNextEvolutionLiving, false);
-            mockCellNeighbourHandler.Setup(x => x.CalculateNumberOfLivingNeighboursOfCell(It.IsAny<ICell>())).Returns(2);
+            mockCellNeighbourHandler.Setup(x => x.CountNumberOfLivingNeighboursOfCell(It.IsAny<ICell>())).Returns(2);
 
             evolutionHandler.DetermineNextEvolution(mockCellNeighbourHandler.Object, mockCell.Object);
 

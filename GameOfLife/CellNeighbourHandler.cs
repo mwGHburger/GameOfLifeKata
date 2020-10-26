@@ -14,7 +14,7 @@ namespace GameOfLife
             }
         }
 
-        public int CalculateNumberOfLivingNeighboursOfCell(ICell cell)
+        public int CountNumberOfLivingNeighboursOfCell(ICell cell)
         {
             var livingNeighboursCounter = 0;
             foreach(ICell neighbourCell in cell.Neighbours)

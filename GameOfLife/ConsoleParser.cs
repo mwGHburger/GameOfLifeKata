@@ -18,13 +18,13 @@ namespace GameOfLife
 
         private string CreateWorldGridString(ICells cells, int maxColumns)
         {
-            var gridString = "";
+            var gridAsString = "";
             foreach(ICell cell in cells.Population)
             {
-                gridString += (cell.IsLiving) ? "*" : ".";
-                gridString += (cell.ColumnLocation.Equals(maxColumns)) ? "\n" : " ";
+                gridAsString += (cell.IsLiving) ? "*" : ".";
+                gridAsString += (cell.ColumnLocation.Equals(maxColumns)) ? "\n" : " ";
             }
-            return gridString;
+            return gridAsString;
         }
     }
 }
